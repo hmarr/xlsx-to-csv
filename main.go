@@ -13,8 +13,10 @@ import (
 type Options struct {
 	ListSheets bool   `short:"l" long:"list-sheets" description:"List sheets"`
 	Sheet      string `short:"s" long:"sheet" description:"Sheet to convert"`
-	InputFile  string `short:"i" long:"input" description:"Input XLSX file (default: stdin)"`
 	OutputFile string `short:"o" long:"output" description:"Output CSV file (default: stdout)"`
+	Positional struct {
+		InputFile string `positional-arg-name:"xslx-file-path"`
+	} `positional-args:"yes" required:"yes"`
 }
 
 var options Options
@@ -40,9 +42,9 @@ func main() {
 
 func runCli() error {
 	inFile := os.Stdin
-	if options.InputFile != "" {
+	if options.Positional.InputFile != "-" {
 		var err error
-		inFile, err = os.Open(options.InputFile)
+		inFile, err = os.Open(options.Positional.InputFile)
 		if err != nil {
 			return err
 		}
